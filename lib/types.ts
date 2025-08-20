@@ -3,7 +3,7 @@ export interface User {
   email: string
   credits: number
   role: 'user' | 'admin'
-  status: 'active' | 'inactive' | 'banned'
+  status: 'active' | 'blocked'
   created_at: string
 }
 

@@ -139,6 +139,23 @@ export async function createRender(
   return data
 }
 
+export async function createRenderWithUpload(
+  projectId: string,
+  userId: string,
+  beforeImageFile: File,
+  style: string
+): Promise<Render | null> {
+  // First upload the image
+  const uploadResult = await uploadImage(beforeImageFile, userId)
+  if (!uploadResult) {
+    console.error('Failed to upload image')
+    return null
+  }
+
+  // Then create the render record
+  return createRender(projectId, uploadResult.url, style)
+}
+
 export async function updateRenderResult(
   renderId: string,
   afterImageUrl: string
@@ -189,11 +206,13 @@ export async function getAllStyles(): Promise<Style[]> {
 // Storage operations
 export async function uploadImage(
   file: File,
+  userId: string,
   bucket: string = 'project-images'
 ): Promise<{ url: string; path: string } | null> {
   const fileExt = file.name.split('.').pop()
   const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
-  const filePath = `uploads/${fileName}`
+  // Store files in user-specific folders as per RLS policy
+  const filePath = `${userId}/${fileName}`
 
   const { error: uploadError } = await supabase.storage
     .from(bucket)

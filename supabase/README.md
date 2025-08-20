@@ -9,26 +9,25 @@ This directory contains all the SQL scripts and configuration needed for the AI 
 2. Create a new project
 3. Copy your project URL and API keys from Settings > API
 
-### 2. Run SQL Scripts
-Execute the following scripts in your Supabase SQL Editor in this order:
+### 2. Run SQL Script
+Execute the main schema file in your Supabase SQL Editor:
 
-1. **schema.sql** - Creates all tables and inserts default styles
-2. **rls-policies.sql** - Enables Row Level Security and creates policies
-3. **auth-trigger.sql** - Creates automatic user creation trigger
+1. **schema.sql** - Creates all tables, enables RLS, creates policies, inserts default styles, and sets up storage bucket
 
-### 3. Create Storage Bucket
-1. Go to Storage in your Supabase dashboard
-2. Create a new bucket named `project-images`
-3. Set it to public for development (can be changed later)
+This single file contains everything you need:
+- Database schema (users, projects, renders, styles)
+- Row Level Security policies
+- Storage bucket creation with policies
+- Default style data
 
-### 4. Environment Variables
+### 3. Environment Variables
 1. Copy `.env.example` to `.env.local`
 2. Fill in your actual Supabase credentials:
    - `NEXT_PUBLIC_SUPABASE_URL`: Your project URL
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your anon/public key
    - `SUPABASE_SERVICE_ROLE_KEY`: Your service role key (keep this secret!)
 
-### 5. Grant Admin Access (Optional)
+### 4. Grant Admin Access (Optional)
 To make a user an admin, run this SQL with their email:
 ```sql
 update users set role = 'admin' where email = 'your-email@example.com';
